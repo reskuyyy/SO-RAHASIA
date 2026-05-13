@@ -6,10 +6,12 @@
 
 <title>Laporan SO</title>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
 <style>
 
 body{
-  font-family: Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:#f3f3f3;
   margin:0;
   padding:20px;
@@ -112,8 +114,8 @@ td,th{
 Load Data
 </button>
 
-<button onclick="toggleFilter()">
-ON/OFF Filter Selisih 0
+<button onclick="exportExcel()">
+Export Excel
 </button>
 
 <div id="result"></div>
@@ -121,8 +123,6 @@ ON/OFF Filter Selisih 0
 </div>
 
 <script>
-
-let filterActive = true;
 
 function formatDate(dateValue){
 
@@ -220,13 +220,7 @@ function applyFilter(){
         value === '0' ||
         value === '0.00'
       ){
-
-        if(filterActive){
-          row.classList.add('hidden-row');
-        }else{
-          row.classList.remove('hidden-row');
-        }
-
+        row.classList.add('hidden-row');
       }
 
     }
@@ -235,11 +229,29 @@ function applyFilter(){
 
 }
 
-function toggleFilter(){
+function exportExcel(){
 
-  filterActive = !filterActive;
+  const table =
+    document.querySelector('table');
 
-  applyFilter();
+  if(!table){
+    alert('Belum ada data');
+    return;
+  }
+
+  const clone =
+    table.cloneNode(true);
+
+  clone.querySelectorAll('.hidden-row')
+    .forEach(row => row.remove());
+
+  const workbook =
+    XLSX.utils.table_to_book(clone);
+
+  XLSX.writeFile(
+    workbook,
+    'laporan_so.xlsx'
+  );
 
 }
 
