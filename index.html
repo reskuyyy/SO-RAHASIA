@@ -31,7 +31,6 @@ body{
 .container{
 
   width:100%;
-
   max-width:1400px;
 
   margin:auto;
@@ -177,37 +176,7 @@ button:hover{
 
 }
 
- /* FIX TOTAL ROW */
-
-tr:last-child td:last-child{
-
-  text-align:left !important;
-
-  padding-left:12px !important;
-
-  min-width:120px !important;
-
-}
-
-tr:last-child td{
-
-  white-space:nowrap !important;
-
-}
-
-/* extra space bawah */
-
-.table-wrapper::after{
-
-  content:'';
-
-  display:block;
-
-  height:30px;
-
-}
-
-/* custom scrollbar */
+/* scrollbar */
 
 .table-wrapper::-webkit-scrollbar{
 
@@ -225,13 +194,15 @@ tr:last-child td{
 
 table{
 
-  width:100%;
+  width:max-content;
 
-  min-width:850px;
+  min-width:100%;
 
   border-collapse:collapse;
 
   font-size:12px;
+
+  table-layout:auto;
 
 }
 
@@ -253,11 +224,13 @@ th,td{
 
   border:1px solid #e5e7eb;
 
-  padding:7px;
+  padding:7px 12px;
 
   text-align:left;
 
   white-space:nowrap;
+
+  vertical-align:middle;
 
 }
 
@@ -309,6 +282,26 @@ table tr > *:nth-child(4){
   display:none;
 }
 
+/* FIX GRAND TOTAL */
+
+tr:last-child td{
+
+  background:#fff;
+
+  position:relative;
+
+  z-index:2;
+
+}
+
+tr:last-child td:last-child{
+
+  min-width:160px !important;
+
+  padding-right:40px !important;
+
+}
+
 /* MOBILE */
 
 @media(max-width:768px){
@@ -325,44 +318,28 @@ table tr > *:nth-child(4){
     flex-direction:column;
   }
 
-  input,button{
+  input,
+  button{
     width:100%;
   }
 
   table{
 
-    min-width:720px;
-
     font-size:11px;
 
   }
 
-  th,td{
+  th,
+  td{
 
-    padding:5px;
+    padding:6px 10px;
 
   }
 
 }
-  
-/* fix total grand bawah kepotong */
 
-table tr:last-child td{
-
-  padding-bottom:20px !important;
-
-  height:auto !important;
-
-  overflow:visible !important;
-
-}
-
-table{
-
-  margin-bottom:30px !important;
-
-}
 </style>
+
 </head>
 
 <body>
@@ -511,9 +488,7 @@ function processTable(){
 
     // stop hide saat rack muncul
 
-    if(
-      text.includes('RACK')
-    ){
+    if(text.includes('RACK')){
 
       hideMode = false;
 
@@ -551,7 +526,7 @@ function processTable(){
 
       }
 
-      // warna
+      // warna positif
 
       if(value > 0){
 
@@ -560,6 +535,8 @@ function processTable(){
         );
 
       }
+
+      // warna negatif
 
       if(value < 0){
 
