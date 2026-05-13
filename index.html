@@ -225,11 +225,13 @@ tr:hover{
 
 }
 
-/* hide conv */
+/* hide Conv.1 */
 
 table tr > *:nth-child(3){
   display:none;
 }
+
+/* hide Conv.2 */
 
 table tr > *:nth-child(4){
   display:none;
@@ -253,19 +255,13 @@ table tr > *:nth-child(4){
 
 }
 
-/* hide row */
+/* hidden */
 
 .hidden-row{
   display:none;
 }
 
-/* hide table */
-
-.hidden-table{
-  display:none;
-}
-
-/* responsive */
+/* mobile */
 
 @media(max-width:768px){
 
@@ -419,34 +415,40 @@ async function loadData(){
 
 function processTable(){
 
-  const tables =
-    document.querySelectorAll('table');
-
-  // hide tabel yang bukan rack
-
-  tables.forEach(table=>{
-
-    const text =
-      table.innerText.toUpperCase();
-
-    if(
-      text.includes('SUBDEPT')
-    ){
-
-      table.classList.add(
-        'hidden-table'
-      );
-
-    }
-
-  });
-
-  // proses row
-
   const rows =
     document.querySelectorAll('tr');
 
+  let hideMode = false;
+
   rows.forEach(row=>{
+
+    const text =
+      row.innerText.toUpperCase();
+
+    // hide bagian subdept
+
+    if(text.includes('SUBDEPT')){
+
+      hideMode = true;
+
+    }
+
+    // stop hide saat rack muncul
+
+    if(
+      text.includes('RACK')
+    ){
+
+      hideMode = false;
+
+    }
+
+    if(hideMode){
+
+      row.style.display =
+        'none';
+
+    }
 
     const cells =
       row.querySelectorAll('td');
@@ -473,7 +475,7 @@ function processTable(){
 
       }
 
-      // warna positif
+      // warna
 
       if(value > 0){
 
@@ -482,8 +484,6 @@ function processTable(){
         );
 
       }
-
-      // warna negatif
 
       if(value < 0){
 
@@ -501,26 +501,10 @@ function processTable(){
 
 function exportExcel(){
 
-  const tables =
-    document.querySelectorAll('table');
+  const table =
+    document.querySelector('table');
 
-  let targetTable = null;
-
-  tables.forEach(table=>{
-
-    if(
-      !table.classList.contains(
-        'hidden-table'
-      )
-    ){
-
-      targetTable = table;
-
-    }
-
-  });
-
-  if(!targetTable){
+  if(!table){
 
     alert('Belum ada data');
 
@@ -529,7 +513,7 @@ function exportExcel(){
   }
 
   const clone =
-    targetTable.cloneNode(true);
+    table.cloneNode(true);
 
   clone
     .querySelectorAll('.hidden-row')
