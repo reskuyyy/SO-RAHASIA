@@ -162,7 +162,7 @@ table{
 
   border-collapse:collapse;
 
-  min-width:850px;
+  min-width:650px;
 
 }
 
@@ -208,10 +208,6 @@ tbody tr:hover{
   text-align:right;
   font-size:15px;
   font-weight:bold;
-}
-
-.center{
-  text-align:center;
 }
 
 .numeric{
@@ -284,13 +280,13 @@ tbody tr:hover{
   }
 
   table{
-    min-width:700px;
+    min-width:100%;
+    font-size:12px;
   }
 
   th,
   td{
     padding:8px;
-    font-size:12px;
   }
 
   .summary{
@@ -377,8 +373,6 @@ Filter Rupiah Terbesar
 <th>Rack</th>
 <th>QTY Fisik</th>
 <th>Selisih Rupiah</th>
-<th>Selisih Qty</th>
-<th>OH</th>
 
 </tr>
 
@@ -550,12 +544,6 @@ async function loadData(){
 
       total += selisih;
 
-      const oh = 0;
-
-      const selQty =
-      parseInt(qtyFisik) -
-      parseInt(oh);
-
       const tr =
       document.createElement('tr');
 
@@ -573,7 +561,7 @@ async function loadData(){
           ${rack}
         </td>
 
-        <td class="center">
+        <td class="numeric">
           ${qtyFisik}
         </td>
 
@@ -581,14 +569,6 @@ async function loadData(){
 
           ${selisihText}
 
-        </td>
-
-        <td class="center">
-          ${selQty}
-        </td>
-
-        <td class="center">
-          ${oh}
         </td>
 
       `;
