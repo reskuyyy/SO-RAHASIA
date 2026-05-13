@@ -1,68 +1,175 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Laporan SO</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 900px;
-      margin: auto;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    button {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    pre {
-      background: #111;
-      color: #0f0;
-      padding: 15px;
-      border-radius: 10px;
-      overflow-x: auto;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Laporan SO</title>
+
+<style>
+
+body{
+  font-family: Arial, sans-serif;
+  background:#f3f3f3;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  max-width:900px;
+  margin:auto;
+  padding:24px;
+  border-radius:18px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1{
+  margin-top:0;
+}
+
+.input-group{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  margin-bottom:8px;
+  font-weight:bold;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  box-sizing:border-box;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:black;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+pre{
+  background:#111;
+  color:#00ff66;
+  padding:16px;
+  border-radius:12px;
+  overflow:auto;
+  min-height:120px;
+}
+
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>Laporan SO Store N497</h1>
-    <p>Ambil data langsung dari API Alfastore.</p>
 
-    <button onclick="loadData()">Load Data</button>
+<div class="card">
 
-    <h3>Response API:</h3>
-    <pre id="output">Klik tombol "Load Data"</pre>
-  </div>
+<h1>Laporan SO</h1>
 
-  <script>
-    async function loadData() {
-      const output = document.getElementById('output');
-      output.textContent = 'Loading...';
+<div class="input-group">
+<label>Kode Toko</label>
+<input type="text" id="storeId" value="N497">
+</div>
 
-      try {
-        const response = await fetch('/api/so');
+<div class="input-group">
+<label>Tanggal SO</label>
+<input type="date" id="dateSo">
+</div>
 
-        if (!response.ok) {
-          throw new Error('Gagal fetch API');
-        }
+<div class="input-group">
+<label>Type SO</label>
 
-        const data = await response.json();
+<select id="typeSo">
+  <option value="GRAND">GRAND</option>
+  <option value="DAILY">DAILY</option>
+</select>
 
-        output.textContent = JSON.stringify(data, null, 2);
-      } catch (err) {
-        output.textContent = 'Error: ' + err.message;
-      }
-    }
-  </script>
+</div>
+
+<button onclick="loadData()">
+Load Data
+</button>
+
+<h3>Response API</h3>
+
+<pre id="output">
+Klik tombol Load Data
+</pre>
+
+</div>
+
+<script>
+
+function formatDate(dateValue){
+
+  const d = new Date(dateValue);
+
+  const day = String(d.getDate()).padStart(2,'0');
+  const month = String(d.getMonth()+1).padStart(2,'0');
+  const year = d.getFullYear();
+
+  return `${day}-${month}-${year}`;
+}
+
+async function loadData(){
+
+  const output = document.getElementById('output');
+
+  const storeId =
+    document.getElementById('storeId').value;
+
+  const dateInput =
+    document.getElementById('dateSo').value;
+
+  const typeSo =
+    document.getElementById('typeSo').value;
+
+  if(!dateInput){
+
+    output.textContent =
+      'Tanggal wajib diisi';
+
+    return;
+  }
+
+  const dateSo = formatDate(dateInput);
+
+  output.textContent = 'Loading...';
+
+  try{
+
+    const url =
+      `/api/so?storeId=${storeId}&dateSo=${dateSo}&typeSo=${typeSo}`;
+
+    const response = await fetch(url);
+
+    const text = await response.text();
+
+    output.textContent = text;
+
+  }catch(err){
+
+    output.textContent =
+      'Error: ' + err.message;
+
+  }
+
+}
+
+</script>
+
 </body>
 </html>
