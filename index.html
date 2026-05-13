@@ -175,11 +175,38 @@ tr:hover{
   display:none;
 }
 
-/* TOTAL */
+/* summary */
 
-.total-cell{
-  min-width:140px !important;
-  padding-right:30px !important;
+.summary-card{
+
+  margin-top:16px;
+
+  padding:16px;
+
+  border-radius:14px;
+
+  background:#f8fafc;
+
+  border:1px solid #e5e7eb;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  font-weight:bold;
+
+  font-size:18px;
+
+}
+
+.summary-value-positive{
+  color:#16a34a;
+}
+
+.summary-value-negative{
+  color:#dc2626;
 }
 
 /* MOBILE */
@@ -210,6 +237,18 @@ tr:hover{
   th,
   td{
     padding:6px 10px;
+  }
+
+  .summary-card{
+
+    font-size:14px;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    align-items:flex-start;
+
   }
 
 }
@@ -269,6 +308,10 @@ Export Excel
   id="result"
 ></div>
 
+<div
+  id="summaryContainer"
+></div>
+
 </div>
 
 </div>
@@ -297,6 +340,11 @@ async function loadData(){
   const result =
     document.getElementById('result');
 
+  const summary =
+    document.getElementById(
+      'summaryContainer'
+    );
+
   const storeId =
     document.getElementById('storeId').value;
 
@@ -316,6 +364,8 @@ async function loadData(){
 
   result.innerHTML =
     '<p>Loading...</p>';
+
+  summary.innerHTML = '';
 
   try{
 
@@ -372,33 +422,24 @@ function processTable(){
 
     // hide total bawaan API
     if(text.includes('TOTAL')){
-
       row.style.display = 'none';
-
     }
 
-    // hide conv column
+    // hide conv columns
     const allCells =
       row.querySelectorAll('th,td');
 
     if(allCells[2]){
-
-      allCells[2].style.width = '0px';
-      allCells[2].style.padding = '0';
-      allCells[2].style.border = 'none';
-      allCells[2].style.fontSize = '0';
-
+      allCells[2].style.display =
+        'none';
     }
 
     if(allCells[3]){
-
-      allCells[3].style.width = '0px';
-      allCells[3].style.padding = '0';
-      allCells[3].style.border = 'none';
-      allCells[3].style.fontSize = '0';
-
+      allCells[3].style.display =
+        'none';
     }
 
+    // proses selisih
     const cells =
       row.querySelectorAll('td');
 
@@ -416,7 +457,6 @@ function processTable(){
 
       if(!isNaN(value)){
 
-        // hitung grand total
         grandTotal += value;
 
         // hide 0
@@ -452,48 +492,34 @@ function processTable(){
 
   });
 
-  // bikin total baru
+  // summary
 
-  const table =
-    document.querySelector('table');
-
-  if(table){
-
-    const tbody =
-      table.querySelector('tbody') || table;
-
-    const totalRow =
-      document.createElement('tr');
-
-    totalRow.innerHTML = `
-
-      <td colspan="7"
-        style="
-          text-align:right;
-          font-weight:bold;
-          background:#f8fafc;
-        "
-      >
-        GRAND TOTAL SELISIH
-      </td>
-
-      <td
-        style="
-          font-weight:bold;
-          background:#f8fafc;
-          color:${grandTotal >= 0 ? '#16a34a' : '#dc2626'};
-        "
-      >
-        ${grandTotal.toLocaleString()}
-      </td>
-
-    `;
-
-    tbody.appendChild(
-      totalRow
+  const summary =
+    document.getElementById(
+      'summaryContainer'
     );
 
-  }
+  summary.innerHTML = `
+
+    <div class="summary-card">
+
+      <div>
+        GRAND TOTAL SELISIH
+      </div>
+
+      <div class="${
+        grandTotal >= 0
+        ? 'summary-value-positive'
+        : 'summary-value-negative'
+      }">
+
+        Rp ${grandTotal.toLocaleString()}
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
