@@ -18,7 +18,7 @@
 body{
 
   margin:0;
-  padding:16px;
+  padding:10px;
 
   font-family:Inter,Arial,sans-serif;
 
@@ -30,6 +30,8 @@ body{
 
 .container{
 
+  width:100%;
+
   max-width:1400px;
 
   margin:auto;
@@ -40,9 +42,9 @@ body{
 
   background:white;
 
-  border-radius:20px;
+  border-radius:18px;
 
-  padding:20px;
+  padding:14px;
 
   box-shadow:
     0 4px 20px rgba(0,0,0,0.08);
@@ -53,7 +55,7 @@ body{
 
 .header{
 
-  margin-bottom:20px;
+  margin-bottom:16px;
 
 }
 
@@ -61,15 +63,17 @@ body{
 
   margin:0;
 
-  font-size:28px;
+  font-size:24px;
 
 }
 
 .header p{
 
-  margin-top:6px;
+  margin-top:4px;
 
   color:#666;
+
+  font-size:13px;
 
 }
 
@@ -83,7 +87,7 @@ body{
 
   flex-wrap:wrap;
 
-  margin-bottom:20px;
+  margin-bottom:16px;
 
 }
 
@@ -101,7 +105,7 @@ input{
 
   flex:1;
 
-  min-width:150px;
+  min-width:140px;
 
 }
 
@@ -159,9 +163,13 @@ button:hover{
 
 .table-wrapper{
 
-  overflow:auto;
+  width:100%;
 
-  border-radius:16px;
+  overflow-x:auto;
+
+  overflow-y:visible;
+
+  border-radius:14px;
 
   border:1px solid #e5e7eb;
 
@@ -169,13 +177,29 @@ button:hover{
 
 }
 
+/* custom scrollbar */
+
+.table-wrapper::-webkit-scrollbar{
+
+  height:8px;
+
+}
+
+.table-wrapper::-webkit-scrollbar-thumb{
+
+  background:#cbd5e1;
+
+  border-radius:20px;
+
+}
+
 table{
 
   width:100%;
 
-  border-collapse:collapse;
+  min-width:850px;
 
-  table-layout:fixed;
+  border-collapse:collapse;
 
   font-size:12px;
 
@@ -199,15 +223,11 @@ th,td{
 
   border:1px solid #e5e7eb;
 
-  padding:6px;
+  padding:7px;
 
-  white-space:normal;
+  text-align:left;
 
-  word-break:break-word;
-
-  overflow-wrap:break-word;
-
-  vertical-align:top;
+  white-space:nowrap;
 
 }
 
@@ -225,13 +245,11 @@ tr:hover{
 
 }
 
-/* hide Conv.1 */
+/* hide conv */
 
 table tr > *:nth-child(3){
   display:none;
 }
-
-/* hide Conv.2 */
 
 table tr > *:nth-child(4){
   display:none;
@@ -261,32 +279,43 @@ table tr > *:nth-child(4){
   display:none;
 }
 
-/* mobile */
+/* MOBILE */
 
 @media(max-width:768px){
 
+  body{
+    padding:6px;
+  }
+
+  .card{
+    padding:10px;
+  }
+
   .toolbar{
-
     flex-direction:column;
-
   }
 
   input,button{
-
     width:100%;
-
   }
 
   table{
 
+    min-width:720px;
+
     font-size:11px;
+
+  }
+
+  th,td{
+
+    padding:5px;
 
   }
 
 }
 
 </style>
-
 </head>
 
 <body>
