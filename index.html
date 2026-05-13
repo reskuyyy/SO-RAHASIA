@@ -16,254 +16,157 @@
 }
 
 body{
-
   margin:0;
   padding:10px;
-
   font-family:Inter,Arial,sans-serif;
-
   background:#eef2f7;
-
   color:#222;
-
 }
 
 .container{
-
   width:100%;
   max-width:1400px;
-
   margin:auto;
-
 }
 
 .card{
-
   background:white;
-
   border-radius:18px;
-
   padding:14px;
-
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.08);
-
+  box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
 /* HEADER */
 
 .header{
-
   margin-bottom:16px;
-
 }
 
 .header h1{
-
   margin:0;
-
   font-size:24px;
-
 }
 
 .header p{
-
   margin-top:4px;
-
   color:#666;
-
   font-size:13px;
-
 }
 
 /* TOOLBAR */
 
 .toolbar{
-
   display:flex;
-
   gap:10px;
-
   flex-wrap:wrap;
-
   margin-bottom:16px;
-
 }
 
 input{
-
   padding:12px;
-
   border-radius:12px;
-
   border:1px solid #dcdcdc;
-
   background:#fafafa;
-
   font-size:14px;
-
   flex:1;
-
   min-width:140px;
-
 }
 
 input:focus{
-
   outline:none;
-
   border-color:#4361ee;
-
   background:white;
-
 }
 
 button{
-
   padding:12px 18px;
-
   border:none;
-
   border-radius:12px;
-
   font-size:14px;
-
   font-weight:600;
-
   cursor:pointer;
-
   transition:0.2s;
-
 }
 
 button:hover{
-
   transform:translateY(-1px);
-
 }
 
 .btn-blue{
-
   background:#4361ee;
-
   color:white;
-
 }
 
 .btn-green{
-
   background:#2a9d8f;
-
   color:white;
-
 }
 
 /* TABLE */
 
 .table-wrapper{
-
   width:100%;
-
   overflow-x:auto;
-
-  overflow-y:hidden;
-
   border-radius:14px;
-
   border:1px solid #e5e7eb;
-
   background:white;
-
 }
 
 /* scrollbar */
 
 .table-wrapper::-webkit-scrollbar{
-
   height:8px;
-
 }
 
 .table-wrapper::-webkit-scrollbar-thumb{
-
   background:#cbd5e1;
-
   border-radius:20px;
-
 }
 
 table{
-
   width:max-content;
-
   min-width:100%;
-
   border-collapse:collapse;
-
   font-size:12px;
-
-  table-layout:auto;
-
 }
 
 th{
-
   background:#f8fafc;
-
   color:#333;
-
   position:sticky;
-
   top:0;
-
   z-index:10;
-
 }
 
-th,td{
-
+th,
+td{
   border:1px solid #e5e7eb;
-
   padding:7px 12px;
-
   text-align:left;
-
   white-space:nowrap;
-
   vertical-align:middle;
-
 }
 
 /* zebra */
 
 tr:nth-child(even){
-
   background:#fafafa;
-
 }
 
 tr:hover{
-
   background:#edf2ff;
-
 }
 
-/* warna selisih */
+/* warna */
 
 .positive{
-
   color:#16a34a;
-
   font-weight:bold;
-
 }
 
 .negative{
-
   color:#dc2626;
-
   font-weight:bold;
-
 }
 
 /* hidden */
@@ -272,24 +175,11 @@ tr:hover{
   display:none;
 }
 
-/* FIX GRAND TOTAL */
+/* TOTAL */
 
-tr:last-child td{
-
-  background:#fff;
-
-  position:relative;
-
-  z-index:2;
-
-}
-
-tr:last-child td:last-child{
-
-  min-width:160px !important;
-
-  padding-right:40px !important;
-
+.total-cell{
+  min-width:140px !important;
+  padding-right:30px !important;
 }
 
 /* MOBILE */
@@ -314,16 +204,12 @@ tr:last-child td:last-child{
   }
 
   table{
-
     font-size:11px;
-
   }
 
   th,
   td{
-
     padding:6px 10px;
-
   }
 
 }
@@ -482,36 +368,27 @@ function processTable(){
       row.style.display = 'none';
     }
 
-    // ambil semua cell
-    const cells =
-      Array.from(
-        row.children
-      );
+    // HIDE CONV COLUMN
+    // pakai visibility supaya colspan aman
 
-    // hapus conv.2 dulu
-    if(cells[3]){
-      cells[3].remove();
+    const allCells =
+      row.querySelectorAll('th,td');
+
+    if(allCells[2]){
+      allCells[2].style.width = '0px';
+      allCells[2].style.padding = '0';
+      allCells[2].style.border = 'none';
+      allCells[2].style.fontSize = '0';
     }
 
-    // refresh lagi
-    const cellsAfter =
-      Array.from(
-        row.children
-      );
-
-    // hapus conv.1
-    if(cellsAfter[2]){
-      cellsAfter[2].remove();
+    if(allCells[3]){
+      allCells[3].style.width = '0px';
+      allCells[3].style.padding = '0';
+      allCells[3].style.border = 'none';
+      allCells[3].style.fontSize = '0';
     }
 
-  });
-
-  // proses warna & filter
-  const rows2 =
-    document.querySelectorAll('tr');
-
-  rows2.forEach(row=>{
-
+    // proses selisih
     const cells =
       row.querySelectorAll('td');
 
@@ -520,6 +397,10 @@ function processTable(){
       const lastCell =
         cells[cells.length - 1];
 
+      lastCell.classList.add(
+        'total-cell'
+      );
+
       const value =
         parseFloat(
           lastCell.innerText
@@ -527,7 +408,7 @@ function processTable(){
           .trim()
         );
 
-      // hide selisih 0
+      // hide 0
       if(value === 0){
 
         row.classList.add(
@@ -546,32 +427,6 @@ function processTable(){
       }
 
       // warna -
-      if(value < 0){
-
-        lastCell.classList.add(
-          'negative'
-        );
-
-      }
-
-    }
-
-  });
-
-}
-
-      // warna positif
-
-      if(value > 0){
-
-        lastCell.classList.add(
-          'positive'
-        );
-
-      }
-
-      // warna negatif
-
       if(value < 0){
 
         lastCell.classList.add(
