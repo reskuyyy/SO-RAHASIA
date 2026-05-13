@@ -18,7 +18,7 @@
 body{
 
   margin:0;
-  padding:24px;
+  padding:16px;
 
   font-family:Inter,Arial,sans-serif;
 
@@ -38,9 +38,9 @@ body{
 
   background:white;
 
-  border-radius:22px;
+  border-radius:20px;
 
-  padding:24px;
+  padding:20px;
 
   box-shadow:
     0 4px 20px rgba(0,0,0,0.08);
@@ -51,14 +51,14 @@ body{
 
 .header{
 
-  margin-bottom:24px;
+  margin-bottom:20px;
 
 }
 
 .header h1{
 
   margin:0;
-  font-size:28px;
+  font-size:26px;
 
 }
 
@@ -74,7 +74,7 @@ body{
 .toolbar{
 
   display:flex;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
 
   margin-bottom:20px;
@@ -83,18 +83,19 @@ body{
 
 input{
 
-  padding:12px 14px;
+  padding:12px;
 
   border-radius:12px;
+
   border:1px solid #dcdcdc;
 
   background:#fafafa;
 
   font-size:14px;
 
-  min-width:180px;
+  flex:1;
 
-  transition:0.2s;
+  min-width:150px;
 
 }
 
@@ -113,9 +114,11 @@ button{
   padding:12px 18px;
 
   border:none;
+
   border-radius:12px;
 
   font-size:14px;
+
   font-weight:600;
 
   cursor:pointer;
@@ -164,7 +167,9 @@ table{
 
   border-collapse:collapse;
 
-  font-size:13px;
+  font-size:12px;
+
+  table-layout:fixed;
 
 }
 
@@ -175,9 +180,9 @@ th{
 
   background:#f8fafc;
 
-  z-index:10;
-
   color:#333;
+
+  z-index:10;
 
 }
 
@@ -185,11 +190,41 @@ th,td{
 
   border:1px solid #e5e7eb;
 
-  padding:8px 10px;
+  padding:6px;
 
-  white-space:nowrap;
+  white-space:normal;
+
+  word-break:break-word;
+
+  overflow-wrap:break-word;
+
+  vertical-align:top;
 
 }
+
+/* ukuran kolom */
+
+td:nth-child(1),
+th:nth-child(1){
+  width:70px;
+}
+
+td:nth-child(2),
+th:nth-child(2){
+  width:220px;
+}
+
+td:nth-child(5),
+th:nth-child(5){
+  width:70px;
+}
+
+td:last-child,
+th:last-child{
+  width:90px;
+}
+
+/* zebra */
 
 tr:nth-child(even){
 
@@ -203,7 +238,7 @@ tr:hover{
 
 }
 
-/* HIDE CONV */
+/* hide Conv.1 dan Conv.2 */
 
 table tr > *:nth-child(3){
   display:none;
@@ -213,7 +248,7 @@ table tr > *:nth-child(4){
   display:none;
 }
 
-/* SELISIH */
+/* warna selisih */
 
 .positive{
 
@@ -229,15 +264,19 @@ table tr > *:nth-child(4){
 
 }
 
-/* HIDDEN */
+/* hide row */
 
 .hidden-row{
   display:none;
 }
 
-/* MOBILE */
+/* mobile */
 
 @media(max-width:768px){
+
+  body{
+    padding:10px;
+  }
 
   .toolbar{
     flex-direction:column;
@@ -245,6 +284,15 @@ table tr > *:nth-child(4){
 
   input,button{
     width:100%;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  th,td{
+    font-size:11px;
+    padding:4px;
   }
 
 }
@@ -302,9 +350,7 @@ Export Excel
 <div
   class="table-wrapper"
   id="result"
->
-
-</div>
+></div>
 
 </div>
 
