@@ -24,11 +24,14 @@ body{
 
   background:#eef2f7;
 
+  color:#222;
+
 }
 
 .container{
 
   max-width:1400px;
+
   margin:auto;
 
 }
@@ -57,13 +60,15 @@ body{
 .header h1{
 
   margin:0;
-  font-size:26px;
+
+  font-size:28px;
 
 }
 
 .header p{
 
   margin-top:6px;
+
   color:#666;
 
 }
@@ -73,7 +78,9 @@ body{
 .toolbar{
 
   display:flex;
+
   gap:10px;
+
   flex-wrap:wrap;
 
   margin-bottom:20px;
@@ -98,6 +105,16 @@ input{
 
 }
 
+input:focus{
+
+  outline:none;
+
+  border-color:#4361ee;
+
+  background:white;
+
+}
+
 button{
 
   padding:12px 18px;
@@ -112,11 +129,20 @@ button{
 
   cursor:pointer;
 
+  transition:0.2s;
+
+}
+
+button:hover{
+
+  transform:translateY(-1px);
+
 }
 
 .btn-blue{
 
   background:#4361ee;
+
   color:white;
 
 }
@@ -124,6 +150,7 @@ button{
 .btn-green{
 
   background:#2a9d8f;
+
   color:white;
 
 }
@@ -138,6 +165,8 @@ button{
 
   border:1px solid #e5e7eb;
 
+  background:white;
+
 }
 
 table{
@@ -146,9 +175,9 @@ table{
 
   border-collapse:collapse;
 
-  font-size:12px;
-
   table-layout:fixed;
+
+  font-size:12px;
 
 }
 
@@ -157,6 +186,12 @@ th{
   background:#f8fafc;
 
   color:#333;
+
+  position:sticky;
+
+  top:0;
+
+  z-index:10;
 
 }
 
@@ -170,16 +205,10 @@ th,td{
 
   word-break:break-word;
 
-}
+  overflow-wrap:break-word;
 
-/* hide conv */
+  vertical-align:top;
 
-table tr > *:nth-child(3){
-  display:none;
-}
-
-table tr > *:nth-child(4){
-  display:none;
 }
 
 /* zebra */
@@ -196,11 +225,22 @@ tr:hover{
 
 }
 
-/* warna */
+/* hide conv */
+
+table tr > *:nth-child(3){
+  display:none;
+}
+
+table tr > *:nth-child(4){
+  display:none;
+}
+
+/* warna selisih */
 
 .positive{
 
   color:#16a34a;
+
   font-weight:bold;
 
 }
@@ -208,30 +248,43 @@ tr:hover{
 .negative{
 
   color:#dc2626;
+
   font-weight:bold;
 
 }
 
-/* hidden */
+/* hide row */
 
 .hidden-row{
   display:none;
 }
 
+/* hide table */
+
 .hidden-table{
   display:none;
 }
 
-/* mobile */
+/* responsive */
 
 @media(max-width:768px){
 
   .toolbar{
+
     flex-direction:column;
+
   }
 
   input,button{
+
     width:100%;
+
+  }
+
+  table{
+
+    font-size:11px;
+
   }
 
 }
@@ -337,7 +390,7 @@ async function loadData(){
     formatDate(dateInput);
 
   result.innerHTML =
-    'Loading...';
+    '<p>Loading...</p>';
 
   try{
 
@@ -369,12 +422,26 @@ function processTable(){
   const tables =
     document.querySelectorAll('table');
 
-  // hide tabel subdept
-  if(tables[0]){
-    tables[0].classList.add(
-      'hidden-table'
-    );
-  }
+  // hide tabel yang bukan rack
+
+  tables.forEach(table=>{
+
+    const text =
+      table.innerText.toUpperCase();
+
+    if(
+      text.includes('SUBDEPT')
+    ){
+
+      table.classList.add(
+        'hidden-table'
+      );
+
+    }
+
+  });
+
+  // proses row
 
   const rows =
     document.querySelectorAll('tr');
@@ -406,7 +473,7 @@ function processTable(){
 
       }
 
-      // warna
+      // warna positif
 
       if(value > 0){
 
@@ -415,6 +482,8 @@ function processTable(){
         );
 
       }
+
+      // warna negatif
 
       if(value < 0){
 
@@ -432,10 +501,26 @@ function processTable(){
 
 function exportExcel(){
 
-  const table =
-    document.querySelectorAll('table')[1];
+  const tables =
+    document.querySelectorAll('table');
 
-  if(!table){
+  let targetTable = null;
+
+  tables.forEach(table=>{
+
+    if(
+      !table.classList.contains(
+        'hidden-table'
+      )
+    ){
+
+      targetTable = table;
+
+    }
+
+  });
+
+  if(!targetTable){
 
     alert('Belum ada data');
 
@@ -444,7 +529,7 @@ function exportExcel(){
   }
 
   const clone =
-    table.cloneNode(true);
+    targetTable.cloneNode(true);
 
   clone
     .querySelectorAll('.hidden-row')
