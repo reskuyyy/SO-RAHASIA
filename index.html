@@ -23,7 +23,6 @@ body{
   font-family:Inter,Arial,sans-serif;
 
   background:#eef2f7;
-  color:#222;
 
 }
 
@@ -99,16 +98,6 @@ input{
 
 }
 
-input:focus{
-
-  outline:none;
-
-  border-color:#4361ee;
-
-  background:white;
-
-}
-
 button{
 
   padding:12px 18px;
@@ -122,14 +111,6 @@ button{
   font-weight:600;
 
   cursor:pointer;
-
-  transition:0.2s;
-
-}
-
-button:hover{
-
-  transform:translateY(-1px);
 
 }
 
@@ -157,8 +138,6 @@ button:hover{
 
   border:1px solid #e5e7eb;
 
-  background:white;
-
 }
 
 table{
@@ -175,14 +154,9 @@ table{
 
 th{
 
-  position:sticky;
-  top:0;
-
   background:#f8fafc;
 
   color:#333;
-
-  z-index:10;
 
 }
 
@@ -196,32 +170,16 @@ th,td{
 
   word-break:break-word;
 
-  overflow-wrap:break-word;
-
-  vertical-align:top;
-
 }
 
-/* ukuran kolom */
+/* hide conv */
 
-td:nth-child(1),
-th:nth-child(1){
-  width:70px;
+table tr > *:nth-child(3){
+  display:none;
 }
 
-td:nth-child(2),
-th:nth-child(2){
-  width:220px;
-}
-
-td:nth-child(5),
-th:nth-child(5){
-  width:70px;
-}
-
-td:last-child,
-th:last-child{
-  width:90px;
+table tr > *:nth-child(4){
+  display:none;
 }
 
 /* zebra */
@@ -238,17 +196,7 @@ tr:hover{
 
 }
 
-/* hide Conv.1 dan Conv.2 */
-
-table tr > *:nth-child(3){
-  display:none;
-}
-
-table tr > *:nth-child(4){
-  display:none;
-}
-
-/* warna selisih */
+/* warna */
 
 .positive{
 
@@ -264,9 +212,13 @@ table tr > *:nth-child(4){
 
 }
 
-/* hide row */
+/* hidden */
 
 .hidden-row{
+  display:none;
+}
+
+.hidden-table{
   display:none;
 }
 
@@ -274,25 +226,12 @@ table tr > *:nth-child(4){
 
 @media(max-width:768px){
 
-  body{
-    padding:10px;
-  }
-
   .toolbar{
     flex-direction:column;
   }
 
   input,button{
     width:100%;
-  }
-
-  .card{
-    padding:14px;
-  }
-
-  th,td{
-    font-size:11px;
-    padding:4px;
   }
 
 }
@@ -398,7 +337,7 @@ async function loadData(){
     formatDate(dateInput);
 
   result.innerHTML =
-    '<p>Loading...</p>';
+    'Loading...';
 
   try{
 
@@ -426,6 +365,16 @@ async function loadData(){
 }
 
 function processTable(){
+
+  const tables =
+    document.querySelectorAll('table');
+
+  // hide tabel subdept
+  if(tables[0]){
+    tables[0].classList.add(
+      'hidden-table'
+    );
+  }
 
   const rows =
     document.querySelectorAll('tr');
@@ -457,7 +406,7 @@ function processTable(){
 
       }
 
-      // warna positif
+      // warna
 
       if(value > 0){
 
@@ -466,8 +415,6 @@ function processTable(){
         );
 
       }
-
-      // warna negatif
 
       if(value < 0){
 
@@ -486,7 +433,7 @@ function processTable(){
 function exportExcel(){
 
   const table =
-    document.querySelector('table');
+    document.querySelectorAll('table')[1];
 
   if(!table){
 
