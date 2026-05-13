@@ -11,24 +11,21 @@
 body{
   font-family: Arial, sans-serif;
   background:#f3f3f3;
+  margin:0;
   padding:20px;
 }
 
 .card{
   background:white;
-  max-width:900px;
+  padding:20px;
+  border-radius:16px;
+  max-width:1200px;
   margin:auto;
-  padding:24px;
-  border-radius:18px;
   box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
 
-h1{
-  margin-top:0;
-}
-
 .input-group{
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
 
 label{
@@ -43,14 +40,13 @@ input,select{
   border-radius:10px;
   border:1px solid #ccc;
   box-sizing:border-box;
-  font-size:16px;
 }
 
 button{
   width:100%;
   padding:14px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   background:black;
   color:white;
   font-size:16px;
@@ -61,13 +57,21 @@ button:hover{
   opacity:0.9;
 }
 
-pre{
-  background:#111;
-  color:#00ff66;
-  padding:16px;
-  border-radius:12px;
+#result{
+  margin-top:24px;
+  background:white;
   overflow:auto;
-  min-height:120px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+td,th{
+  border:1px solid #ccc;
+  padding:4px;
+  font-size:12px;
 }
 
 </style>
@@ -93,8 +97,8 @@ pre{
 <label>Type SO</label>
 
 <select id="typeSo">
-  <option value="GRAND">GRAND</option>
-  <option value="DAILY">DAILY</option>
+<option value="GRAND">GRAND</option>
+<option value="DAILY">DAILY</option>
 </select>
 
 </div>
@@ -103,11 +107,9 @@ pre{
 Load Data
 </button>
 
-<h3>Response API</h3>
+<div id="result">
 
-<pre id="output">
-Klik tombol Load Data
-</pre>
+</div>
 
 </div>
 
@@ -126,7 +128,8 @@ function formatDate(dateValue){
 
 async function loadData(){
 
-  const output = document.getElementById('output');
+  const result =
+    document.getElementById('result');
 
   const storeId =
     document.getElementById('storeId').value;
@@ -139,31 +142,35 @@ async function loadData(){
 
   if(!dateInput){
 
-    output.textContent =
-      'Tanggal wajib diisi';
+    result.innerHTML =
+      '<p>Tanggal wajib diisi</p>';
 
     return;
   }
 
-  const dateSo = formatDate(dateInput);
+  const dateSo =
+    formatDate(dateInput);
 
-  output.textContent = 'Loading...';
+  result.innerHTML =
+    '<p>Loading...</p>';
 
   try{
 
     const url =
       `/api/so?storeId=${storeId}&dateSo=${dateSo}&typeSo=${typeSo}`;
 
-    const response = await fetch(url);
+    const response =
+      await fetch(url);
 
-    const text = await response.text();
+    const html =
+      await response.text();
 
-    output.textContent = text;
+    result.innerHTML = html;
 
   }catch(err){
 
-    output.textContent =
-      'Error: ' + err.message;
+    result.innerHTML =
+      '<p>Error: '+err.message+'</p>';
 
   }
 
