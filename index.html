@@ -369,8 +369,8 @@ Monitoring Selisih Stock Opname
 <input
   type="text"
   id="storeId"
-  value="N497"
   placeholder="Kode Toko"
+  readonly
 >
 
 <input
@@ -462,8 +462,14 @@ window.onload = ()=>{
   .getElementById('dateSo')
   .valueAsDate = new Date();
 
-};
+  document
+  .getElementById('storeId')
+  .value =
 
+  localStorage.getItem('storeId');
+
+};
+  
 function formatDate(date){
 
   const d = new Date(date);
