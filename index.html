@@ -470,50 +470,55 @@ function processTable(){
 
     // hide subdept
     if(text.includes('SUBDEPT')){
-
       hideMode = true;
-
     }
 
     // stop saat rack
     if(text.includes('RACK')){
-
       hideMode = false;
-
     }
 
     if(hideMode){
-
-      row.style.display =
-        'none';
-
+      row.style.display = 'none';
     }
+
+    // ambil semua cell
+    const cells =
+      Array.from(
+        row.children
+      );
+
+    // hapus conv.2 dulu
+    if(cells[3]){
+      cells[3].remove();
+    }
+
+    // refresh lagi
+    const cellsAfter =
+      Array.from(
+        row.children
+      );
+
+    // hapus conv.1
+    if(cellsAfter[2]){
+      cellsAfter[2].remove();
+    }
+
+  });
+
+  // proses warna & filter
+  const rows2 =
+    document.querySelectorAll('tr');
+
+  rows2.forEach(row=>{
 
     const cells =
-      row.querySelectorAll('th,td');
-
-    // HAPUS conv.1 & conv.2 asli
-    // bukan display none
-
-    if(cells[3]){
-
-      cells[3].remove();
-
-    }
-
-    if(cells[2]){
-
-      cells[2].remove();
-
-    }
-
-    const newCells =
       row.querySelectorAll('td');
 
-    if(newCells.length > 0){
+    if(cells.length > 0){
 
       const lastCell =
-        newCells[newCells.length-1];
+        cells[cells.length - 1];
 
       const value =
         parseFloat(
@@ -531,7 +536,7 @@ function processTable(){
 
       }
 
-      // warna
+      // warna +
       if(value > 0){
 
         lastCell.classList.add(
@@ -540,6 +545,7 @@ function processTable(){
 
       }
 
+      // warna -
       if(value < 0){
 
         lastCell.classList.add(
