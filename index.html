@@ -1,534 +1,647 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Stock Opname Report</title>
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-
-  margin:0;
-  padding:16px;
-
-  font-family:Inter,Arial,sans-serif;
-
-  background:#eef2f7;
-
-  color:#222;
-
-}
-
-.container{
-
-  max-width:1400px;
-
-  margin:auto;
-
-}
-
-.card{
-
-  background:white;
-
-  border-radius:20px;
-
-  padding:20px;
-
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.08);
-
-}
-
-/* HEADER */
-
-.header{
-
-  margin-bottom:20px;
-
-}
-
-.header h1{
-
-  margin:0;
-
-  font-size:28px;
-
-}
-
-.header p{
-
-  margin-top:6px;
-
-  color:#666;
-
-}
-
-/* TOOLBAR */
-
-.toolbar{
-
-  display:flex;
-
-  gap:10px;
-
-  flex-wrap:wrap;
-
-  margin-bottom:20px;
-
-}
-
-input{
-
-  padding:12px;
-
-  border-radius:12px;
-
-  border:1px solid #dcdcdc;
-
-  background:#fafafa;
-
-  font-size:14px;
-
-  flex:1;
-
-  min-width:150px;
-
-}
-
-input:focus{
-
-  outline:none;
-
-  border-color:#4361ee;
-
-  background:white;
-
-}
-
-button{
-
-  padding:12px 18px;
-
-  border:none;
-
-  border-radius:12px;
-
-  font-size:14px;
-
-  font-weight:600;
-
-  cursor:pointer;
-
-  transition:0.2s;
-
-}
-
-button:hover{
-
-  transform:translateY(-1px);
-
-}
-
-.btn-blue{
-
-  background:#4361ee;
-
-  color:white;
-
-}
-
-.btn-green{
-
-  background:#2a9d8f;
-
-  color:white;
-
-}
-
-/* TABLE */
-
-.table-wrapper{
-
-  overflow:auto;
-
-  border-radius:16px;
-
-  border:1px solid #e5e7eb;
-
-  background:white;
-
-}
-
-table{
-
-  width:100%;
-
-  border-collapse:collapse;
-
-  table-layout:fixed;
-
-  font-size:12px;
-
-}
-
-th{
-
-  background:#f8fafc;
-
-  color:#333;
-
-  position:sticky;
-
-  top:0;
-
-  z-index:10;
-
-}
-
-th,td{
-
-  border:1px solid #e5e7eb;
-
-  padding:6px;
-
-  white-space:normal;
-
-  word-break:break-word;
-
-  overflow-wrap:break-word;
-
-  vertical-align:top;
-
-}
-
-/* zebra */
-
-tr:nth-child(even){
-
-  background:#fafafa;
-
-}
-
-tr:hover{
-
-  background:#edf2ff;
-
-}
-
-/* hide Conv.1 */
-
-table tr > *:nth-child(3){
-  display:none;
-}
-
-/* hide Conv.2 */
-
-table tr > *:nth-child(4){
-  display:none;
-}
-
-/* warna selisih */
-
-.positive{
-
-  color:#16a34a;
-
-  font-weight:bold;
-
-}
-
-.negative{
-
-  color:#dc2626;
-
-  font-weight:bold;
-
-}
-
-/* hidden */
-
-.hidden-row{
-  display:none;
-}
-
-/* mobile */
-
-@media(max-width:768px){
-
-  .toolbar{
-
-    flex-direction:column;
-
+  :root {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --border: #dde3ea;
+    --text: #1a202c;
+    --muted: #64748b;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --th-bg: #f1f5f9;
+    --row-hover: #f0f7ff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --radius: 14px;
+    --font: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
   }
 
-  input,button{
+- { box-sizing: border-box; margin: 0; padding: 0; }
 
-    width:100%;
-
-  }
-
-  table{
-
-    font-size:11px;
-
-  }
-
+body {
+font-family: var(–font);
+background: var(–bg);
+color: var(–text);
+padding: 24px 16px;
+min-height: 100vh;
 }
 
+.container {
+max-width: 1440px;
+margin: auto;
+display: flex;
+flex-direction: column;
+gap: 16px;
+}
+
+/* ── HEADER ── */
+.header {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+flex-wrap: wrap;
+gap: 12px;
+}
+
+.header-left h1 {
+font-size: 22px;
+font-weight: 700;
+letter-spacing: -0.4px;
+color: var(–text);
+}
+
+.header-left p {
+font-size: 13px;
+color: var(–muted);
+margin-top: 3px;
+}
+
+.badge-count {
+display: inline-block;
+font-family: var(–mono);
+font-size: 11px;
+font-weight: 600;
+background: var(–accent-light);
+color: var(–accent);
+border-radius: 20px;
+padding: 3px 10px;
+margin-top: 6px;
+}
+
+/* ── CARD ── */
+.card {
+background: var(–surface);
+border-radius: var(–radius);
+padding: 20px;
+box-shadow: var(–shadow);
+border: 1px solid var(–border);
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+display: flex;
+gap: 10px;
+flex-wrap: wrap;
+align-items: center;
+}
+
+.input-group {
+display: flex;
+flex-direction: column;
+gap: 4px;
+flex: 1;
+min-width: 130px;
+}
+
+.input-group label {
+font-size: 11px;
+font-weight: 600;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+input[type=“text”],
+input[type=“date”] {
+padding: 10px 13px;
+border-radius: 10px;
+border: 1.5px solid var(–border);
+background: #fafbfc;
+font-family: var(–font);
+font-size: 14px;
+color: var(–text);
+transition: border-color 0.15s, box-shadow 0.15s;
+width: 100%;
+}
+
+input[type=“text”]:focus,
+input[type=“date”]:focus {
+outline: none;
+border-color: var(–accent);
+background: white;
+box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.btn-group {
+display: flex;
+gap: 8px;
+align-items: flex-end;
+padding-bottom: 0;
+}
+
+button {
+padding: 10px 20px;
+border: none;
+border-radius: 10px;
+font-family: var(–font);
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.15s;
+white-space: nowrap;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+button:active { transform: translateY(0); }
+
+.btn-primary { background: var(–accent); color: white; }
+.btn-export  { background: #059669; color: white; }
+.btn-export:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+
+/* ── SUMMARY STRIP ── */
+.summary {
+display: none;
+gap: 10px;
+flex-wrap: wrap;
+}
+.summary.visible { display: flex; }
+
+.stat-card {
+flex: 1;
+min-width: 140px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 14px 18px;
+box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.stat-label {
+font-size: 11px;
+font-weight: 600;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.5px;
+margin-bottom: 6px;
+}
+
+.stat-value {
+font-family: var(–mono);
+font-size: 20px;
+font-weight: 600;
+color: var(–text);
+}
+
+.stat-value.red  { color: var(–red); }
+.stat-value.green{ color: var(–green); }
+
+/* ── TABLE ── */
+.table-wrapper {
+overflow: auto;
+border-radius: 12px;
+border: 1px solid var(–border);
+background: white;
+max-height: 65vh;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+font-size: 12.5px;
+}
+
+/* column widths */
+col.c-no      { width: 40px; }
+col.c-barcode { width: 120px; }
+col.c-name    { width: auto; }
+col.c-hpp     { width: 88px; }
+col.c-sys     { width: 70px; }
+col.c-so      { width: 70px; }
+col.c-selisih { width: 70px; }
+col.c-nilai   { width: 100px; }
+
+thead th {
+background: var(–th-bg);
+color: var(–muted);
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+position: sticky;
+top: 0;
+z-index: 10;
+padding: 10px 8px;
+border-bottom: 1.5px solid var(–border);
+white-space: nowrap;
+}
+
+thead th:first-child { border-radius: 0; }
+
+td {
+padding: 8px;
+border-bottom: 1px solid #f1f5f9;
+vertical-align: middle;
+white-space: nowrap;
+}
+
+/* kolom nama boleh wrap */
+td.col-name {
+white-space: normal;
+word-break: break-word;
+max-width: 260px;
+line-height: 1.4;
+}
+
+tr:hover td { background: var(–row-hover); }
+tr:nth-child(even) td { background: #fafbfc; }
+tr:nth-child(even):hover td { background: var(–row-hover); }
+
+/* angka rata kanan */
+td.num { text-align: right; font-family: var(–mono); font-size: 12px; }
+th.num { text-align: right; }
+
+/* selisih */
+td.positive {
+color: var(–green);
+font-weight: 700;
+font-family: var(–mono);
+font-size: 12px;
+text-align: right;
+background: var(–green-bg) !important;
+}
+td.negative {
+color: var(–red);
+font-weight: 700;
+font-family: var(–mono);
+font-size: 12px;
+text-align: right;
+background: var(–red-bg) !important;
+}
+
+/* no row */
+td.col-no { text-align: center; color: var(–muted); font-size: 11px; }
+
+/* group header row */
+tr.group-header td {
+background: #1e3a5f !important;
+color: white;
+font-weight: 700;
+font-size: 11.5px;
+letter-spacing: 0.3px;
+padding: 7px 8px;
+text-transform: uppercase;
+}
+
+.hidden-row { display: none !important; }
+
+/* ── EMPTY / LOADING / ERROR ── */
+.state-box {
+padding: 60px 20px;
+text-align: center;
+color: var(–muted);
+}
+.state-box .icon { font-size: 36px; margin-bottom: 12px; }
+.state-box p { font-size: 14px; }
+
+.spinner {
+display: inline-block;
+width: 32px; height: 32px;
+border: 3px solid var(–border);
+border-top-color: var(–accent);
+border-radius: 50%;
+animation: spin 0.7s linear infinite;
+margin-bottom: 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── MOBILE ── */
+@media(max-width: 640px) {
+.toolbar { flex-direction: column; }
+.input-group, .btn-group { width: 100%; }
+.btn-group { flex-direction: column; }
+button { width: 100%; justify-content: center; }
+.stat-card { min-width: 0; }
+}
 </style>
 
 </head>
-
 <body>
-
 <div class="container">
 
-<div class="card">
+  <!-- HEADER -->
 
-<div class="header">
+  <div class="header">
+    <div class="header-left">
+      <h1>📦 Stock Opname Report</h1>
+      <p>Monitoring selisih hasil stock opname per toko</p>
+      <span class="badge-count" id="rowCount" style="display:none"></span>
+    </div>
+  </div>
 
-<h1>Stock Opname Report</h1>
+  <!-- TOOLBAR -->
 
-<p>
-Monitoring Selisih Stock Opname
-</p>
+  <div class="card">
+    <div class="toolbar">
+      <div class="input-group" style="max-width:120px">
+        <label>Kode Toko</label>
+        <input type="text" id="storeId" value="N497" placeholder="Kode Toko">
+      </div>
+      <div class="input-group" style="max-width:180px">
+        <label>Tanggal SO</label>
+        <input type="date" id="dateSo">
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="loadData()">
+          🔍 Tampilkan
+        </button>
+        <button class="btn-export" id="btnExport" onclick="exportExcel()" disabled>
+          ⬇ Export Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+
+  <div class="summary" id="summary">
+    <div class="stat-card">
+      <div class="stat-label">Total Item Selisih</div>
+      <div class="stat-value" id="statTotal">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Selisih Plus (+)</div>
+      <div class="stat-value green" id="statPlus">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Selisih Minus (−)</div>
+      <div class="stat-value red" id="statMinus">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Nilai Selisih</div>
+      <div class="stat-value" id="statNilai">—</div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div class="table-wrapper" id="result">
+      <div class="state-box">
+        <div class="icon">🗂</div>
+        <p>Masukkan kode toko dan tanggal SO, lalu klik <strong>Tampilkan</strong>.</p>
+      </div>
+    </div>
+  </div>
 
 </div>
 
-<div class="toolbar">
-
-<input
-  type="text"
-  id="storeId"
-  value="N497"
-  placeholder="Kode Toko"
->
-
-<input
-  type="date"
-  id="dateSo"
->
-
-<button
-  class="btn-blue"
-  onclick="loadData()"
->
-Tampilkan
-</button>
-
-<button
-  class="btn-green"
-  onclick="exportExcel()"
->
-Export Excel
-</button>
-
-</div>
-
-<div
-  class="table-wrapper"
-  id="result"
-></div>
-
-</div>
-
-</div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <script>
-
-function formatDate(dateValue){
-
-  const d = new Date(dateValue);
-
-  const day =
-    String(d.getDate()).padStart(2,'0');
-
-  const month =
-    String(d.getMonth()+1).padStart(2,'0');
-
-  const year =
-    d.getFullYear();
-
-  return `${day}-${month}-${year}`;
-
+/* ── UTILS ── */
+function formatDate(val) {
+  const d = new Date(val);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  return `${dd}-${mm}-${d.getFullYear()}`;
 }
 
-async function loadData(){
+function parseNum(str) {
+  if (!str) return NaN;
+  return parseFloat(String(str).replace(/[^0-9.\-]/g,''));
+}
 
-  const result =
-    document.getElementById('result');
+function fmtRp(n) {
+  if (isNaN(n)) return '—';
+  return new Intl.NumberFormat('id-ID').format(Math.round(n));
+}
 
-  const storeId =
-    document.getElementById('storeId').value;
+/* ── LOAD DATA ── */
+async function loadData() {
+  const resultEl = document.getElementById('result');
+  const storeId  = document.getElementById('storeId').value.trim();
+  const dateVal  = document.getElementById('dateSo').value;
 
-  const dateInput =
-    document.getElementById('dateSo').value;
+  if (!storeId) { alert('Kode toko wajib diisi'); return; }
+  if (!dateVal) { alert('Tanggal SO wajib diisi'); return; }
 
-  if(!dateInput){
+  const dateSo = formatDate(dateVal);
 
-    alert('Tanggal wajib diisi');
+  // loading state
+  resultEl.innerHTML = `
+    <div class="state-box">
+      <div class="spinner"></div>
+      <p>Mengambil data <strong>${storeId}</strong> — ${dateSo}…</p>
+    </div>`;
+  document.getElementById('btnExport').disabled = true;
+  document.getElementById('summary').classList.remove('visible');
+  document.getElementById('rowCount').style.display = 'none';
 
-    return;
+  try {
+    const url = `/api/so?storeId=${encodeURIComponent(storeId)}&dateSo=${encodeURIComponent(dateSo)}&typeSo=GRAND`;
+    const res  = await fetch(url);
 
-  }
+    if (!res.ok) throw new Error(`Server error ${res.status}: ${res.statusText}`);
 
-  const dateSo =
-    formatDate(dateInput);
-
-  result.innerHTML =
-    '<p>Loading...</p>';
-
-  try{
-
-    const url =
-      `/api/so?storeId=${storeId}&dateSo=${dateSo}&typeSo=GRAND`;
-
-    const response =
-      await fetch(url);
-
-    const html =
-      await response.text();
-
-    result.innerHTML =
-      html;
-
+    const html = await res.text();
+    resultEl.innerHTML = html;
     processTable();
 
-  }catch(err){
-
-    result.innerHTML =
-      err.message;
-
+  } catch(err) {
+    resultEl.innerHTML = `
+      <div class="state-box">
+        <div class="icon">⚠️</div>
+        <p><strong>Gagal memuat data:</strong><br>${err.message}</p>
+      </div>`;
   }
-
 }
 
-function processTable(){
+/* ── PROCESS TABLE ── */
+function processTable() {
+  const result  = document.getElementById('result');
+  const origTbl = result.querySelector('table');
 
-  const rows =
-    document.querySelectorAll('tr');
+  if (!origTbl) {
+    result.innerHTML = `
+      <div class="state-box">
+        <div class="icon">🔍</div>
+        <p>Tidak ada data ditemukan untuk parameter tersebut.</p>
+      </div>`;
+    return;
+  }
 
-  let hideMode = false;
+  /* Baca semua baris dari tabel original */
+  const origRows = Array.from(origTbl.querySelectorAll('tr'));
 
-  rows.forEach(row=>{
+  /* Tentukan kolom mana yang perlu disembunyikan (Conv.1, Conv.2 = index 2,3) */
+  const hideCols = new Set([2, 3]);
 
-    const text =
-      row.innerText.toUpperCase();
+  /* Bangun tabel baru yang rapih */
+  const wrapper = document.createElement('div');
+  wrapper.className = 'table-wrapper';
 
-    // hide bagian subdept
+  const tbl = document.createElement('table');
+  tbl.setAttribute('cellspacing', '0');
 
-    if(text.includes('SUBDEPT')){
+  /* colgroup untuk lebar kolom */
+  const cg = document.createElement('colgroup');
+  ['c-no','c-barcode','c-name','c-hpp','c-sys','c-so','c-selisih','c-nilai']
+    .forEach(c => {
+      const col = document.createElement('col');
+      col.className = c;
+      cg.appendChild(col);
+    });
+  tbl.appendChild(cg);
 
-      hideMode = true;
+  const thead = document.createElement('thead');
+  const tbody = document.createElement('tbody');
+  tbl.appendChild(thead);
+  tbl.appendChild(tbody);
+  wrapper.appendChild(tbl);
 
+  let hideMode   = false;
+  let visRowIdx  = 0;
+  let headerDone = false;
+  let statPlus   = 0, statMinus = 0, statTotal = 0, statNilai = 0;
+  let nilaiColIdx = -1; // kolom "nilai selisih" (kolom terakhir biasanya)
+
+  origRows.forEach((origRow, rIdx) => {
+    /* Filter sel — buang hideCols */
+    const origCells = Array.from(origRow.querySelectorAll('th, td'));
+    if (origCells.length === 0) return;
+
+    const visibleCells = origCells.filter((_, ci) => !hideCols.has(ci));
+    const fullText     = origRow.innerText.toUpperCase();
+
+    /* ── Header row (th) ── */
+    if (origCells[0]?.tagName === 'TH' || (rIdx === 0 && !headerDone)) {
+      headerDone = true;
+      const tr = document.createElement('tr');
+      visibleCells.forEach((cell, ci) => {
+        const th = document.createElement('th');
+        th.textContent = cell.textContent.trim();
+        if (ci === 0) th.textContent = '#';
+        if (ci >= 3) th.classList.add('num'); // HPP, Sys, SO, Selisih, Nilai
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+      nilaiColIdx = visibleCells.length - 1;
+      return;
     }
 
-    // stop hide saat rack muncul
+    /* ── Logika hide subdept section ── */
+    if (fullText.includes('SUBDEPT')) { hideMode = true; }
+    if (fullText.includes('RACK'))    { hideMode = false; }
 
-    if(
-      text.includes('RACK')
-    ){
+    /* ── Group header (baris RACK / section) ── */
+    const isGroup = fullText.includes('RACK') || fullText.includes('TOTAL') ||
+                    (visibleCells.length === 1) ||
+                    (!fullText.match(/\d{5,}/) && fullText.length > 3 && visibleCells.length < 4);
 
-      hideMode = false;
+    /* ── Baca nilai selisih & nilai ── */
+    const lastTxt = visibleCells[visibleCells.length - 1]?.textContent.trim() ?? '';
+    const selVal  = parseNum(lastTxt);
 
-    }
+    /* hide baris selisih 0 (kecuali header group) */
+    const shouldHide = hideMode ||
+                       (!isGroup && !isNaN(selVal) && selVal === 0);
 
-    if(hideMode){
+    if (shouldHide) return; // skip baris ini
 
-      row.style.display =
-        'none';
+    /* ── Buat row ── */
+    const tr = document.createElement('tr');
+    if (isGroup) tr.classList.add('group-header');
 
-    }
+    visibleCells.forEach((origCell, ci) => {
+      const td = document.createElement('td');
+      td.textContent = origCell.textContent.trim();
 
-    const cells =
-      row.querySelectorAll('td');
+      if (!isGroup) {
+        if (ci === 0) {
+          // nomor urut
+          td.textContent = ++visRowIdx;
+          td.classList.add('col-no');
+        } else if (ci === 2) {
+          td.classList.add('col-name');
+        } else if (ci >= 3) {
+          td.classList.add('num');
+        }
 
-    if(cells.length > 0){
+        /* warna kolom selisih (kolom ke-nilaiColIdx-1, biasanya qty selisih) */
+        const isSelisihCol = ci === nilaiColIdx - 1;
+        const isNilaiCol   = ci === nilaiColIdx;
 
-      const lastCell =
-        cells[cells.length-1];
-
-      const value =
-        parseFloat(
-          lastCell.innerText
-          .replace(/,/g,'')
-          .trim()
-        );
-
-      // hide selisih 0
-
-      if(value === 0){
-
-        row.classList.add(
-          'hidden-row'
-        );
-
+        if (isSelisihCol || isNilaiCol) {
+          const v = parseNum(td.textContent);
+          if (!isNaN(v)) {
+            if (v > 0) td.classList.add('positive');
+            if (v < 0) td.classList.add('negative');
+          }
+        }
       }
 
-      // warna
+      tr.appendChild(td);
+    });
 
-      if(value > 0){
+    tbody.appendChild(tr);
 
-        lastCell.classList.add(
-          'positive'
-        );
-
-      }
-
-      if(value < 0){
-
-        lastCell.classList.add(
-          'negative'
-        );
-
-      }
-
+    /* ── Statistik ── */
+    if (!isGroup && !isNaN(selVal)) {
+      statTotal++;
+      if (selVal > 0) statPlus++;
+      if (selVal < 0) statMinus++;
+      // nilai selisih = kolom terakhir jika ada 2 kolom angka di akhir
+      const nilaiTxt = visibleCells[nilaiColIdx - 1]?.textContent.trim();
+      const nilaiV   = parseNum(nilaiTxt);
+      if (!isNaN(nilaiV)) statNilai += nilaiV;
     }
-
   });
 
+  /* Ganti isi result */
+  result.innerHTML = '';
+  result.appendChild(wrapper);
+
+  /* Update summary */
+  document.getElementById('statTotal').textContent = statTotal;
+  document.getElementById('statPlus').textContent  = statPlus;
+  document.getElementById('statMinus').textContent = statMinus;
+  const nilaiEl = document.getElementById('statNilai');
+  nilaiEl.textContent = (statNilai < 0 ? '−' : '') + 'Rp ' + fmtRp(Math.abs(statNilai));
+  nilaiEl.className   = 'stat-value ' + (statNilai < 0 ? 'red' : statNilai > 0 ? 'green' : '');
+
+  document.getElementById('summary').classList.add('visible');
+  document.getElementById('btnExport').disabled = false;
+
+  const badge = document.getElementById('rowCount');
+  badge.textContent = `${statTotal} item selisih ditemukan`;
+  badge.style.display = 'inline-block';
 }
 
-function exportExcel(){
+/* ── EXPORT EXCEL ── */
+function exportExcel() {
+  const tbl = document.querySelector('#result table');
+  if (!tbl) { alert('Belum ada data'); return; }
 
-  const table =
-    document.querySelector('table');
+  const storeId = document.getElementById('storeId').value.trim();
+  const dateVal = document.getElementById('dateSo').value;
+  const label   = dateVal ? formatDate(dateVal).replace(/-/g,'') : 'SO';
+  const fname   = `SO_${storeId}_${label}.xlsx`;
 
-  if(!table){
+  /* Clone & bersihkan hidden rows */
+  const clone = tbl.cloneNode(true);
+  clone.querySelectorAll('.hidden-row').forEach(r => r.remove());
 
-    alert('Belum ada data');
+  const wb = XLSX.utils.table_to_book(clone, { sheet: 'SO Report' });
 
-    return;
-
-  }
-
-  const clone =
-    table.cloneNode(true);
-
-  clone
-    .querySelectorAll('.hidden-row')
-    .forEach(row=>row.remove());
-
-  const wb =
-    XLSX.utils.table_to_book(clone);
-
-  XLSX.writeFile(
-    wb,
-    'SO_REPORT.xlsx'
-  );
-
+  /* Sedikit style pada header */
+  const ws = wb.Sheets['SO Report'];
+  XLSX.writeFile(wb, fname);
 }
-
 </script>
 
 </body>
