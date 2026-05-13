@@ -5,248 +5,97 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Stock Opname Report</title>
+<title>SO REPORT</title>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
 
-*{
-  box-sizing:border-box;
-}
-
 body{
-
+  font-family:Arial,sans-serif;
+  background:#f5f5f5;
   margin:0;
-  padding:24px;
-
-  font-family:Inter,Arial,sans-serif;
-
-  background:#eef2f7;
-  color:#222;
-
+  padding:20px;
 }
 
 .container{
-
-  max-width:1400px;
-  margin:auto;
-
-}
-
-.card{
-
   background:white;
-
-  border-radius:22px;
-
-  padding:24px;
-
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.08);
-
+  padding:20px;
+  border-radius:16px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
-
-/* HEADER */
-
-.header{
-
-  margin-bottom:24px;
-
-}
-
-.header h1{
-
-  margin:0;
-  font-size:28px;
-
-}
-
-.header p{
-
-  margin-top:6px;
-  color:#666;
-
-}
-
-/* TOOLBAR */
 
 .toolbar{
-
   display:flex;
-  gap:12px;
+  gap:10px;
   flex-wrap:wrap;
-
   margin-bottom:20px;
-
 }
 
 input{
-
-  padding:12px 14px;
-
-  border-radius:12px;
-  border:1px solid #dcdcdc;
-
-  background:#fafafa;
-
-  font-size:14px;
-
-  min-width:180px;
-
-  transition:0.2s;
-
-}
-
-input:focus{
-
-  outline:none;
-
-  border-color:#4361ee;
-
-  background:white;
-
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ccc;
 }
 
 button{
-
   padding:12px 18px;
-
   border:none;
-  border-radius:12px;
-
-  font-size:14px;
-  font-weight:600;
-
+  border-radius:10px;
+  color:white;
   cursor:pointer;
-
-  transition:0.2s;
-
-}
-
-button:hover{
-
-  transform:translateY(-1px);
-
 }
 
 .btn-blue{
-
   background:#4361ee;
-  color:white;
-
 }
 
 .btn-green{
-
-  background:#2a9d8f;
-  color:white;
-
+  background:#43aa4b;
 }
 
-/* TABLE */
-
 .table-wrapper{
-
   overflow:auto;
-
-  border-radius:16px;
-
-  border:1px solid #e5e7eb;
-
-  background:white;
-
 }
 
 table{
-
   width:100%;
-
   border-collapse:collapse;
-
-  font-size:13px;
-
-}
-
-th{
-
-  position:sticky;
-  top:0;
-
-  background:#f8fafc;
-
-  z-index:10;
-
-  color:#333;
-
 }
 
 th,td{
-
-  border:1px solid #e5e7eb;
-
-  padding:8px 10px;
-
+  border:1px solid #ccc;
+  padding:5px;
+  font-size:12px;
   white-space:nowrap;
-
 }
 
-tr:nth-child(even){
-
-  background:#fafafa;
-
+th{
+  background:#efefef;
 }
-
-tr:hover{
-
-  background:#edf2ff;
-
-}
-
-/* HIDE CONV */
-
-table tr > *:nth-child(3){
-  display:none;
-}
-
-table tr > *:nth-child(4){
-  display:none;
-}
-
-/* SELISIH */
 
 .positive{
-
-  color:#16a34a;
+  color:green;
   font-weight:bold;
-
 }
 
 .negative{
-
-  color:#dc2626;
+  color:red;
   font-weight:bold;
-
 }
-
-/* HIDDEN */
 
 .hidden-row{
   display:none;
 }
 
-/* MOBILE */
+/* hide Conv.1 */
+table tr > *:nth-child(3){
+  display:none;
+}
 
-@media(max-width:768px){
-
-  .toolbar{
-    flex-direction:column;
-  }
-
-  input,button{
-    width:100%;
-  }
-
+/* hide Conv.2 */
+table tr > *:nth-child(4){
+  display:none;
 }
 
 </style>
@@ -257,17 +106,7 @@ table tr > *:nth-child(4){
 
 <div class="container">
 
-<div class="card">
-
-<div class="header">
-
-<h1>Stock Opname Report</h1>
-
-<p>
-Monitoring Selisih Stock Opname
-</p>
-
-</div>
+<h2>STOCK OPNAME REPORT</h2>
 
 <div class="toolbar">
 
@@ -302,11 +141,7 @@ Export Excel
 <div
   class="table-wrapper"
   id="result"
->
-
-</div>
-
-</div>
+></div>
 
 </div>
 
@@ -352,7 +187,7 @@ async function loadData(){
     formatDate(dateInput);
 
   result.innerHTML =
-    '<p>Loading...</p>';
+    'Loading...';
 
   try{
 
@@ -365,10 +200,9 @@ async function loadData(){
     const html =
       await response.text();
 
-    result.innerHTML =
-      html;
+    result.innerHTML = html;
 
-    processTable();
+    filterTable();
 
   }catch(err){
 
@@ -379,7 +213,7 @@ async function loadData(){
 
 }
 
-function processTable(){
+function filterTable(){
 
   const rows =
     document.querySelectorAll('tr');
@@ -401,8 +235,6 @@ function processTable(){
           .trim()
         );
 
-      // hide selisih 0
-
       if(value === 0){
 
         row.classList.add(
@@ -411,8 +243,6 @@ function processTable(){
 
       }
 
-      // warna positif
-
       if(value > 0){
 
         lastCell.classList.add(
@@ -420,8 +250,6 @@ function processTable(){
         );
 
       }
-
-      // warna negatif
 
       if(value < 0){
 
