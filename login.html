@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login</title>
+
+<style>
+
+body{
+
+  margin:0;
+
+  height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  background:#eef2f7;
+
+  font-family:Arial;
+
+}
+
+.card{
+
+  background:white;
+
+  padding:30px;
+
+  border-radius:16px;
+
+  width:320px;
+
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+
+}
+
+h2{
+
+  margin-top:0;
+
+  text-align:center;
+
+}
+
+input{
+
+  width:100%;
+
+  padding:12px;
+
+  margin-bottom:12px;
+
+  border-radius:10px;
+
+  border:1px solid #ccc;
+
+  box-sizing:border-box;
+
+}
+
+button{
+
+  width:100%;
+
+  padding:12px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#0d47ff;
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+#error{
+
+  color:red;
+
+  margin-top:10px;
+
+  text-align:center;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>LOGIN STORE</h2>
+
+<input
+  type="text"
+  id="store"
+  placeholder="Kode Toko"
+>
+
+<input
+  type="password"
+  id="password"
+  placeholder="Password"
+>
+
+<button onclick="login()">
+Login
+</button>
+
+<div id="error"></div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+  getAuth,
+  signInWithEmailAndPassword
+
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyAO4avHYZsIMgeibThNl6HTGaPWH4GiqD0",
+
+  authDomain: "reskuyyy-df105.firebaseapp.com",
+
+  projectId: "reskuyyy-df105",
+
+  storageBucket: "reskuyyy-df105.firebasestorage.app",
+
+  messagingSenderId: "954977450705",
+
+  appId: "1:954977450705:web:b653ab6277c1798f57a3f0"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+window.login = async ()=>{
+
+  const store =
+  document
+  .getElementById('store')
+  .value
+  .trim()
+  .toLowerCase();
+
+  const password =
+  document
+  .getElementById('password')
+  .value;
+
+  const email =
+  `${store}@internal.so`;
+
+  try{
+
+    await signInWithEmailAndPassword(
+
+      auth,
+      email,
+      password
+
+    );
+
+    localStorage.setItem(
+      'storeId',
+      store.toUpperCase()
+    );
+
+    window.location =
+    'index.html';
+
+  }catch(err){
+
+    document
+    .getElementById('error')
+    .innerText =
+    'Login gagal';
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
