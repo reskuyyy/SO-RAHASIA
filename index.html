@@ -32,16 +32,16 @@ body{
   margin-bottom:20px;
 }
 
-input{
+input,button{
+
   padding:12px;
   border-radius:10px;
   border:1px solid #ccc;
+  font-size:14px;
 }
 
 button{
-  padding:12px 18px;
   border:none;
-  border-radius:10px;
   color:white;
   cursor:pointer;
 }
@@ -65,9 +65,8 @@ table{
 
 th,td{
   border:1px solid #ccc;
-  padding:5px;
+  padding:6px;
   font-size:12px;
-  white-space:nowrap;
 }
 
 th{
@@ -82,20 +81,6 @@ th{
 .negative{
   color:red;
   font-weight:bold;
-}
-
-.hidden-row{
-  display:none;
-}
-
-/* hide Conv.1 */
-table tr > *:nth-child(3){
-  display:none;
-}
-
-/* hide Conv.2 */
-table tr > *:nth-child(4){
-  display:none;
 }
 
 </style>
@@ -114,7 +99,7 @@ table tr > *:nth-child(4){
   type="text"
   id="storeId"
   value="N497"
-  placeholder="Kode Toko"
+  placeholder="Kode toko"
 >
 
 <input
@@ -141,7 +126,9 @@ Export Excel
 <div
   class="table-wrapper"
   id="result"
-></div>
+>
+
+</div>
 
 </div>
 
@@ -161,7 +148,6 @@ function formatDate(dateValue){
     d.getFullYear();
 
   return `${day}-${month}-${year}`;
-
 }
 
 async function loadData(){
@@ -180,7 +166,6 @@ async function loadData(){
     alert('Tanggal wajib diisi');
 
     return;
-
   }
 
   const dateSo =
@@ -228,22 +213,24 @@ function filterTable(){
       const lastCell =
         cells[cells.length-1];
 
-      const value =
-        parseFloat(
-          lastCell.innerText
-          .replace(/,/g,'')
-          .trim()
-        );
+      let value =
+        lastCell.innerText
+        .replace(/,/g,'')
+        .trim();
 
-      if(value === 0){
+      const num =
+        parseFloat(value);
 
-        row.classList.add(
-          'hidden-row'
-        );
+      // hide 0
+      if(num === 0){
+
+        row.style.display =
+          'none';
 
       }
 
-      if(value > 0){
+      // warna
+      if(num > 0){
 
         lastCell.classList.add(
           'positive'
@@ -251,7 +238,7 @@ function filterTable(){
 
       }
 
-      if(value < 0){
+      if(num < 0){
 
         lastCell.classList.add(
           'negative'
@@ -275,15 +262,25 @@ function exportExcel(){
     alert('Belum ada data');
 
     return;
-
   }
 
   const clone =
     table.cloneNode(true);
 
   clone
-    .querySelectorAll('.hidden-row')
-    .forEach(row=>row.remove());
+    .querySelectorAll('tr')
+    .forEach(row=>{
+
+      if(
+        row.style.display ===
+        'none'
+      ){
+
+        row.remove();
+
+      }
+
+    });
 
   const wb =
     XLSX.utils.table_to_book(clone);
