@@ -397,102 +397,98 @@ function processTable(){
   const rows =
     document.querySelectorAll('tr');
 
-  let hideMode = false;
-
   let grandTotal = 0;
 
   rows.forEach(row=>{
 
-    const text =
-      row.innerText.toUpperCase();
-
-    // hide subdept
-    if(text.includes('SUBDEPT')){
-      hideMode = true;
-    }
-
-    // stop saat rack
-    if(text.includes('RACK')){
-      hideMode = false;
-    }
-
-    if(hideMode){
-      row.style.display = 'none';
-    }
-
-    // hide total bawaan API
-    if(text.includes('TOTAL')){
-      row.style.display = 'none';
-    }
-
-    // hide conv columns
-    const allCells =
-      row.querySelectorAll('th,td');
-
-    if(allCells[2]){
-      allCells[2].style.display =
-        'none';
-    }
-
-    if(allCells[3]){
-      allCells[3].style.display =
-        'none';
-    }
-
-    // proses selisih
     const cells =
       row.querySelectorAll('td');
 
-    if(cells.length > 0){
+    // skip row aneh
+    if(cells.length < 5){
+      return;
+    }
 
-      const lastCell =
-        cells[cells.length - 1];
+    // hide conv columns
+    if(cells[2]){
 
-      const value =
-        parseFloat(
-          lastCell.innerText
-          .replace(/,/g,'')
-          .trim()
-        );
+      cells[2].style.display =
+        'none';
 
-      if(!isNaN(value)){
+    }
 
-        grandTotal += value;
+    if(cells[3]){
 
-        // hide 0
-        if(value === 0){
+      cells[3].style.display =
+        'none';
 
-          row.classList.add(
-            'hidden-row'
-          );
+    }
 
-        }
+    // ambil selisih rupiah
+    const lastCell =
+      cells[cells.length - 1];
 
-        // warna +
-        if(value > 0){
+    const rawText =
+      lastCell.innerText.trim();
 
-          lastCell.classList.add(
-            'positive'
-          );
+    // parsing format indo
+    const cleanValue =
+      rawText
+      .replace(/\./g,'')
+      .replace(',', '.')
+      .replace(/[^\d.-]/g,'');
 
-        }
+    const value =
+      parseFloat(cleanValue);
 
-        // warna -
-        if(value < 0){
+    // skip bukan angka
+    if(isNaN(value)){
+      return;
+    }
 
-          lastCell.classList.add(
-            'negative'
-          );
+    // skip total bawaan api
+    const rowText =
+      row.innerText.toUpperCase();
 
-        }
+    if(
+      rowText.includes('TOTAL') ||
+      rowText.includes('GRAND')
+    ){
+      return;
+    }
 
-      }
+    // hitung total
+    grandTotal += value;
+
+    // hide selisih 0
+    if(value === 0){
+
+      row.classList.add(
+        'hidden-row'
+      );
+
+    }
+
+    // warna
+    if(value > 0){
+
+      lastCell.classList.add(
+        'positive'
+      );
+
+    }
+
+    if(value < 0){
+
+      lastCell.classList.add(
+        'negative'
+      );
 
     }
 
   });
 
-  // summary
+  // summary total
 
   const summary =
     document.getElementById(
@@ -513,7 +509,12 @@ function processTable(){
         : 'summary-value-negative'
       }">
 
-        Rp ${grandTotal.toLocaleString()}
+        Rp ${grandTotal.toLocaleString(
+          'id-ID',
+          {
+            minimumFractionDigits:2
+          }
+        )}
 
       </div>
 
