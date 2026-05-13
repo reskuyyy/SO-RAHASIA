@@ -16,239 +16,235 @@
 }
 
 body{
+
   margin:0;
-  padding:10px;
+  padding:24px;
+
   font-family:Inter,Arial,sans-serif;
+
   background:#eef2f7;
   color:#222;
+
 }
 
 .container{
-  width:100%;
+
   max-width:1400px;
   margin:auto;
+
 }
 
 .card{
+
   background:white;
-  border-radius:18px;
-  padding:14px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.08);
+
+  border-radius:22px;
+
+  padding:24px;
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.08);
+
 }
 
 /* HEADER */
 
 .header{
-  margin-bottom:16px;
+
+  margin-bottom:24px;
+
 }
 
 .header h1{
+
   margin:0;
-  font-size:24px;
+  font-size:28px;
+
 }
 
 .header p{
-  margin-top:4px;
+
+  margin-top:6px;
   color:#666;
-  font-size:13px;
+
 }
 
 /* TOOLBAR */
 
 .toolbar{
+
   display:flex;
-  gap:10px;
+  gap:12px;
   flex-wrap:wrap;
-  margin-bottom:16px;
+
+  margin-bottom:20px;
+
 }
 
 input{
-  padding:12px;
+
+  padding:12px 14px;
+
   border-radius:12px;
   border:1px solid #dcdcdc;
+
   background:#fafafa;
+
   font-size:14px;
-  flex:1;
-  min-width:140px;
+
+  min-width:180px;
+
+  transition:0.2s;
+
 }
 
 input:focus{
+
   outline:none;
+
   border-color:#4361ee;
+
   background:white;
+
 }
 
 button{
+
   padding:12px 18px;
+
   border:none;
   border-radius:12px;
+
   font-size:14px;
   font-weight:600;
+
   cursor:pointer;
+
   transition:0.2s;
+
 }
 
 button:hover{
+
   transform:translateY(-1px);
+
 }
 
 .btn-blue{
+
   background:#4361ee;
   color:white;
+
 }
 
 .btn-green{
+
   background:#2a9d8f;
   color:white;
+
 }
 
 /* TABLE */
 
 .table-wrapper{
-  width:100%;
-  overflow-x:auto;
-  border-radius:14px;
+
+  overflow:auto;
+
+  border-radius:16px;
+
   border:1px solid #e5e7eb;
+
   background:white;
-}
 
-/* scrollbar */
-
-.table-wrapper::-webkit-scrollbar{
-  height:8px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb{
-  background:#cbd5e1;
-  border-radius:20px;
 }
 
 table{
-  width:max-content;
-  min-width:100%;
+
+  width:100%;
+
   border-collapse:collapse;
-  font-size:12px;
+
+  font-size:13px;
+
 }
 
 th{
-  background:#f8fafc;
-  color:#333;
+
   position:sticky;
   top:0;
+
+  background:#f8fafc;
+
   z-index:10;
+
+  color:#333;
+
 }
 
-th,
-td{
+th,td{
+
   border:1px solid #e5e7eb;
-  padding:7px 12px;
-  text-align:left;
-  white-space:nowrap;
-  vertical-align:middle;
-}
 
-/* zebra */
+  padding:8px 10px;
+
+  white-space:nowrap;
+
+}
 
 tr:nth-child(even){
+
   background:#fafafa;
+
 }
 
 tr:hover{
+
   background:#edf2ff;
+
 }
 
-/* warna */
+/* HIDE CONV */
 
-.positive{
-  color:#16a34a;
-  font-weight:bold;
-}
-
-.negative{
-  color:#dc2626;
-  font-weight:bold;
-}
-
-/* hidden */
-
-.hidden-row{
+table tr > *:nth-child(3){
   display:none;
 }
 
-/* summary */
+table tr > *:nth-child(4){
+  display:none;
+}
 
-.summary-card{
+/* SELISIH */
 
-  margin-top:16px;
+.positive{
 
-  padding:16px;
-
-  border-radius:14px;
-
-  background:#f8fafc;
-
-  border:1px solid #e5e7eb;
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
+  color:#16a34a;
   font-weight:bold;
 
-  font-size:18px;
-
 }
 
-.summary-value-positive{
-  color:#16a34a;
-}
+.negative{
 
-.summary-value-negative{
   color:#dc2626;
+  font-weight:bold;
+
+}
+
+/* HIDDEN */
+
+.hidden-row{
+  display:none;
 }
 
 /* MOBILE */
 
 @media(max-width:768px){
 
-  body{
-    padding:6px;
-  }
-
-  .card{
-    padding:10px;
-  }
-
   .toolbar{
     flex-direction:column;
   }
 
-  input,
-  button{
+  input,button{
     width:100%;
-  }
-
-  table{
-    font-size:11px;
-  }
-
-  th,
-  td{
-    padding:6px 10px;
-  }
-
-  .summary-card{
-
-    font-size:14px;
-
-    flex-direction:column;
-
-    gap:8px;
-
-    align-items:flex-start;
-
   }
 
 }
@@ -306,11 +302,9 @@ Export Excel
 <div
   class="table-wrapper"
   id="result"
-></div>
+>
 
-<div
-  id="summaryContainer"
-></div>
+</div>
 
 </div>
 
@@ -340,11 +334,6 @@ async function loadData(){
   const result =
     document.getElementById('result');
 
-  const summary =
-    document.getElementById(
-      'summaryContainer'
-    );
-
   const storeId =
     document.getElementById('storeId').value;
 
@@ -364,8 +353,6 @@ async function loadData(){
 
   result.innerHTML =
     '<p>Loading...</p>';
-
-  summary.innerHTML = '';
 
   try{
 
@@ -397,130 +384,56 @@ function processTable(){
   const rows =
     document.querySelectorAll('tr');
 
-  let grandTotal = 0;
-
   rows.forEach(row=>{
 
     const cells =
       row.querySelectorAll('td');
 
-    // skip row aneh
-    if(cells.length < 5){
-      return;
-    }
+    if(cells.length > 0){
 
-    // hide conv columns
-    if(cells[2]){
+      const lastCell =
+        cells[cells.length-1];
 
-      cells[2].style.display =
-        'none';
+      const value =
+        parseFloat(
+          lastCell.innerText
+          .replace(/,/g,'')
+          .trim()
+        );
 
-    }
+      // hide selisih 0
 
-    if(cells[3]){
+      if(value === 0){
 
-      cells[3].style.display =
-        'none';
+        row.classList.add(
+          'hidden-row'
+        );
 
-    }
+      }
 
-    // ambil selisih rupiah
-    const lastCell =
-      cells[cells.length - 1];
+      // warna positif
 
-    const rawText =
-      lastCell.innerText.trim();
+      if(value > 0){
 
-    // parsing format indo
-    const cleanValue =
-      rawText
-      .replace(/\./g,'')
-      .replace(',', '.')
-      .replace(/[^\d.-]/g,'');
+        lastCell.classList.add(
+          'positive'
+        );
 
-    const value =
-      parseFloat(cleanValue);
+      }
 
-    // skip bukan angka
-    if(isNaN(value)){
-      return;
-    }
+      // warna negatif
 
-    // skip total bawaan api
-    const rowText =
-      row.innerText.toUpperCase();
+      if(value < 0){
 
-    if(
-      rowText.includes('TOTAL') ||
-      rowText.includes('GRAND')
-    ){
-      return;
-    }
+        lastCell.classList.add(
+          'negative'
+        );
 
-    // hitung total
-    grandTotal += value;
-
-    // hide selisih 0
-    if(value === 0){
-
-      row.classList.add(
-        'hidden-row'
-      );
-
-    }
-
-    // warna
-    if(value > 0){
-
-      lastCell.classList.add(
-        'positive'
-      );
-
-    }
-
-    if(value < 0){
-
-      lastCell.classList.add(
-        'negative'
-      );
+      }
 
     }
 
   });
-
-  // summary total
-
-  const summary =
-    document.getElementById(
-      'summaryContainer'
-    );
-
-  summary.innerHTML = `
-
-    <div class="summary-card">
-
-      <div>
-        GRAND TOTAL SELISIH
-      </div>
-
-      <div class="${
-        grandTotal >= 0
-        ? 'summary-value-positive'
-        : 'summary-value-negative'
-      }">
-
-        Rp ${grandTotal.toLocaleString(
-          'id-ID',
-          {
-            minimumFractionDigits:2
-          }
-        )}
-
-      </div>
-
-    </div>
-
-  `;
 
 }
 
