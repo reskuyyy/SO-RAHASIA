@@ -398,11 +398,13 @@ async function loadData(){
       ?.innerText
       .trim() || '0';
 
-      const selisih =
-      parseFloat(
-        selisihText.replace(/,/g,'')
-      ) || 0;
+     const cleanSelisih =
+selisihText
+  .replace(/,/g,'')
+  .replace(/[^\d.-]/g,'');
 
+const selisih =
+Number(cleanSelisih) || 0;
       if(selisih === 0){
         return;
       }
